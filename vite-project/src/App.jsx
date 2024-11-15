@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState , useEffect} from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -10,17 +10,31 @@ function App() {
   // const [count, setCount] = useState(0)
   const [todo, settodo] = useState("")
   const [todos, settodos] = useState([])
+  const [showfinished, setshowfinished] = useState(true)
+
+useEffect(() => {
+  let todostring  = localStorage.getItem("todos")
+  if (todostring ) {
+    let todos = JSON.parse(localStorage.getItem("todos"))
+    settodos(todos)
+  }
+}, [])
+
+
+
+const savetols = ()=>{
+  localStorage.setItem("todos",JSON.stringify(todos))
+}
 
   let handleEdit = async (e, id) => {
     console.log(e, id)
-    let t = todos.filter(i => {
-      i.id === id
-    })
+    let t = todos.filter(i => i.id === id)
     settodo(t[0].todo)
     let newTodos = todos.filter(item => {
       return item.id !== id
     })
     settodos(newTodos)
+    savetols()
   }
 
   let handleDelete = async (e, id) => {
@@ -28,6 +42,7 @@ function App() {
       return item.id !== id
     })
     settodos(newTodos)
+    savetols()
   }
 
   let handleChange = async (e) => {
@@ -37,6 +52,7 @@ function App() {
   let handleAdd = async () => {
     settodos([...todos, { id: uuidv4(), todo, isComplete: true }])
     settodo("")
+    savetols()
   }
 
   let handleCheckbox = async (e) => {
@@ -48,6 +64,7 @@ function App() {
     let newTodos = [...todos]
     newTodos[index].isComplete = !newTodos[index].isComplete
     settodos(newTodos)
+    savetols()
   }
 
   return (
@@ -59,6 +76,7 @@ function App() {
           <input onChange={handleChange} value={todo} type="text" className='w-1/2' />
           <button onClick={handleAdd} className='bg-violet-800 hover:bg-violet-900 p-2 text-sm font-bold py-1 text-white rounded-md mx-6'>Save</button>
         </div>
+        <input type="checkbox" checked={showfinished}/> Show Finished
         <h1 className="text-xl font-bold">Your Todos</h1>
         <div className="todos">
           {todos.length === 0 && <div>No Todos To Display</div>}
@@ -68,7 +86,7 @@ function App() {
                 <input onChange={handleCheckbox} value={items.isComplete} type="checkbox" name={items.id} id="" />
                 <div className={items.isComplete ? "" : "line-through"}>{items.todo}</div>
               </div>
-              <div className="butt">
+              <div className="button flex h-full">
                 <button onClick={(e) => handleEdit(e, items.id)} className="button bg-violet-800 hover:bg-violet-900 p-2 text-sm font-bold py-1 text-white rounded-md mx-1">Edit</button>
                 <button onClick={(e) => { handleDelete(e, items.id) }} className="button bg-violet-800 hover:bg-violet-900 p-2 text-sm font-bold py-1 text-white rounded-md mx-1">Delete</button>
               </div>

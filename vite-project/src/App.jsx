@@ -4,6 +4,8 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import Navbar from './componenets/navbar'
 import { v4 as uuidv4 } from 'uuid';
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 
 function App() {
@@ -24,6 +26,9 @@ useEffect(() => {
 
 const savetols = ()=>{
   localStorage.setItem("todos",JSON.stringify(todos))
+}
+const toogleFinished = (e)=>{
+  setshowfinished(!showfinished)
 }
 
   let handleEdit = async (e, id) => {
@@ -50,7 +55,7 @@ const savetols = ()=>{
   }
 
   let handleAdd = async () => {
-    settodos([...todos, { id: uuidv4(), todo, isComplete: true }])
+    settodos([...todos, { id: uuidv4(), todo, isComplete: false }])
     settodo("")
     savetols()
   }
@@ -70,25 +75,25 @@ const savetols = ()=>{
   return (
     <>
       <Navbar />
-      <div className="container mx-auto my-5 rounded-xl p-5 bg-violet-100 min-h-[80vh]">
+      <div className="mx-3 md:container md:mx-auto my-5 rounded-xl p-5 bg-violet-100 h-auto md:w-1/2">
         <div className="addtodo my-5">
           <h1 className="text-lg">Add a Todo</h1>
-          <input onChange={handleChange} value={todo} type="text" className='w-1/2' />
-          <button onClick={handleAdd} className='bg-violet-800 hover:bg-violet-900 p-2 text-sm font-bold py-1 text-white rounded-md mx-6'>Save</button>
+          <input placeholder='Name Of Your Todo' onChange={handleChange} value={todo} type="text" className='w-full rounded-lg px-5 py-2 mt-5' />
+          <button onClick={handleAdd} disabled={todo.length<=3} className='w-[100%] m-auto mt-[25px] bg-violet-800 hover:bg-violet-900 p-2 text-sm font-bold py-1 text-white rounded-md '>Save</button>
         </div>
-        <input type="checkbox" checked={showfinished}/> Show Finished
+        <input onChange={toogleFinished} type="checkbox" checked={showfinished}/> Show Finished
         <h1 className="text-xl font-bold">Your Todos</h1>
         <div className="todos">
           {todos.length === 0 && <div>No Todos To Display</div>}
           {todos.map(items => {
-            return <div key={items.id} className="todo flex w-1/4 my-3 justify-between">
+            return (showfinished || !items.isComplete) && <div key={items.id} className="todo w-[100%] flex md:w-1/2 my-3 justify-between">
               <div className="flex gap-5">
-                <input onChange={handleCheckbox} value={items.isComplete} type="checkbox" name={items.id} id="" />
-                <div className={items.isComplete ? "" : "line-through"}>{items.todo}</div>
+                <input onChange={handleCheckbox} checked={items.isComplete} type="checkbox" name={items.id} id="" />
+                <div className={items.isComplete ? "line-through" : ""}>{items.todo}</div>
               </div>
               <div className="button flex h-full">
-                <button onClick={(e) => handleEdit(e, items.id)} className="button bg-violet-800 hover:bg-violet-900 p-2 text-sm font-bold py-1 text-white rounded-md mx-1">Edit</button>
-                <button onClick={(e) => { handleDelete(e, items.id) }} className="button bg-violet-800 hover:bg-violet-900 p-2 text-sm font-bold py-1 text-white rounded-md mx-1">Delete</button>
+                <button onClick={(e) => handleEdit(e, items.id)} className="button bg-violet-800 hover:bg-violet-900 p-2 text-sm font-bold py-1 text-white rounded-md mx-1"><FaEdit /></button>
+                <button onClick={(e) => { handleDelete(e, items.id) }} className="button bg-violet-800 hover:bg-violet-900 p-2 text-sm font-bold py-1 text-white rounded-md mx-1"><MdDelete /></button>
               </div>
             </div>
           })}

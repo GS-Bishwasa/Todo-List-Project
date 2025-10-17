@@ -2,16 +2,15 @@ import React from 'react'
 
 const navbar = () => {
   return (
-    <nav className='flex justify-between bg-violet-700 text-white py-2'>
-        <div className="logo">
-            <span className='font-bold text-xl mx-9'>
-                i Task
-            </span>
+    <nav className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">TaskFlow</h1>
+          <div className='flex items-center px-3 py-2 rounded-full'>
+          <p className="text-md opacity-90 ">Organize your day</p>
+          </div>
         </div>
-        <ul className="flex gap-8 mx-9">
-            <li className='cursor-pointer hover:font-bold transition-all duration-150'>Home</li>
-            <li className='cursor-pointer hover:font-bold transition-all duration-150'>Task</li>
-        </ul>
+      </div>
     </nav>
   )
 }
